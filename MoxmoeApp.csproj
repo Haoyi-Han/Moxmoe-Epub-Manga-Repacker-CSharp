@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ApplicationIcon>favicon.ico</ApplicationIcon>
+        <PackageId>MoxmoeCSharp</PackageId>
+        <Version>0.1.0</Version>
+        <Title>Moxmoe Repacker</Title>
+        <Authors>Haoyi HAN</Authors>
+        <Company/>
+        <Product>MoxmoeCSharp</Product>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Spectre.Console" Version="0.47.0"/>
+        <PackageReference Include="WindowsAPICodePack" Version="7.0.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="global.json"/>
+    </ItemGroup>
+
+</Project>
