@@ -16,6 +16,50 @@ public class Utils
     {
         return comicName.Replace("[", "[[").Replace("]", "]]");
     }
+    
+    public static string SanitizeFileName(string filename)
+    {
+        return FileNameSanitizer.SanitizeFileName(filename);
+    }
+}
+
+public class FileNameSanitizer
+{
+    private static readonly List<char> InvalidChars = new(){ '/', '\\', ':', '*', '?', '"', '<', '>', '|' };
+    
+    private static readonly Dictionary<char, string> ReplacementDict = new()
+    {
+        { '/', "／" },
+        { '\\', "＼" },
+        { ':', "：" },
+        { '*', "＊" },
+        { '?', "？" },
+        { '"', "＂" },
+        { '<', "＜" },
+        { '>', "＞" },
+        { '|', "｜" }
+    };
+    
+    public static string SanitizeFileName(string filename)
+    {
+        // foreach (char invalidChar in InvalidChars)
+        // {
+        //     if (filename.Contains(invalidChar))
+        //     {
+        //         filename = filename.Replace(invalidChar.ToString(), ReplacementDict.GetValueOrDefault(invalidChar, ""));
+        //     }
+        // }
+        
+        InvalidChars.ForEach(invalidChar =>
+        {
+            if (filename.Contains(invalidChar))
+            {
+                filename = filename.Replace(invalidChar.ToString(), ReplacementDict.GetValueOrDefault(invalidChar, ""));
+            }
+        });
+
+        return filename;
+    }
 }
 
 public class IniReader

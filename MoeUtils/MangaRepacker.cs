@@ -105,7 +105,8 @@ public class Repacker
 
     private string LoadZipImg(string zipFile)
     {
-        var zipFileStem = Path.GetFileNameWithoutExtension(zipFile);
+        // 连续去除扩展名以及 .kepub 标记
+        var zipFileStem = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(zipFile));
         LogLine($"[yellow]开始解析 {Utils.ComicNameDecorator(zipFileStem)}[/]");
         var extractDir = Path.Combine(SharedInfo.CacheDir, zipFileStem);
         while (Directory.Exists(extractDir))
@@ -114,6 +115,7 @@ public class Repacker
         ZipFile.ExtractToDirectory(zipFile, extractDir);
         var (opfDoc, opfNsmgr) = XmlReader.ReadOpfFile(Path.Combine(extractDir, "vol.opf"));
         var comicName = ComicNameExtract(opfDoc, opfNsmgr);
+        comicName = Utils.SanitizeFileName(comicName);
         var comicNameMarkup = Utils.ComicNameDecorator(comicName);
 
         LogLine($"{comicNameMarkup} => [yellow]开始提取[/]");
@@ -155,9 +157,14 @@ public class Repacker
     private void PackFolder(string inDir, string outDir, string ext = ".cbz")
     {
         var comicName = new DirectoryInfo(inDir).Name;
+        comicName = Utils.SanitizeFileName(comicName);
         var comicNameMarkup = Utils.ComicNameDecorator(comicName);
         LogLine($"{comicNameMarkup} => [yellow]开始打包[/]");
         var cbzFile = Path.Combine(outDir, comicName + ".zip");
+        if (!Directory.Exists(outDir))
+        {
+            Directory.CreateDirectory(outDir);
+        }
         ZipFile.CreateFromDirectory(inDir, cbzFile);
         FileSystem.RenameFile(cbzFile, Path.GetFileNameWithoutExtension(cbzFile) + ext);
         LogLine($"{comicNameMarkup} => [green]打包完成[/]");
